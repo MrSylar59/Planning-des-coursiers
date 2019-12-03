@@ -4,7 +4,6 @@ import java.util.Date;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +17,6 @@ import javax.persistence.ManyToOne;
  * @author thomas
  */
 @Entity
-@DiscriminatorValue("TOURN")
 public class Tournee implements Serializable {
     /*  PARAMETRES  */
     private static final long serialVersionUID = 1L;
@@ -27,7 +25,7 @@ public class Tournee implements Serializable {
      * Id pour la table de la base de données
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     /**
@@ -37,23 +35,23 @@ public class Tournee implements Serializable {
     private Date debut;
     
     /**
-     * Instance à laquelle est liée la tournée. Utilisée pour créer les liens
-     * dans le modèle de données
-     */
-    @ManyToOne
-    @JoinColumn(name="INST_ID")
-    private Instance inst;
-    
-    /**
      * Date de fin d'une tournée
      */
     @Column(name = "DATE_FIN")
     private Date fin;
     
+    /**
+     * Instance à laquelle est liée la tournée. Utilisée pour créer les liens
+     * dans le modèle de données
+     */
+    @ManyToOne
+    @JoinColumn(name = "INST_ID")
+    private Instance inst;
+    
     /*  CONSTRUCTEURS  */
     public Tournee() {
-        this.debut = new Date();
-        this.fin = new Date();
+        this.debut  = new Date();
+        this.fin    = new Date();
     }
     
     /**
@@ -68,8 +66,8 @@ public class Tournee implements Serializable {
         this();
         
         if (debut != null && fin != null){
-            this.debut = debut;
-            this.fin = fin;
+            this.debut  = debut;
+            this.fin    = fin;
         }
         else
             System.out.println("[WARNING] Passed null argument to "
@@ -86,8 +84,8 @@ public class Tournee implements Serializable {
         this();
         
         if (t != null){
-            this.debut = t.debut;
-            this.fin = t.fin;
+            this.debut  = t.debut;
+            this.fin    = t.fin;
         }
         else
             System.out.println("[WARNING] Passed null argument to "
@@ -101,6 +99,14 @@ public class Tournee implements Serializable {
 
     public Date getFin() {
         return fin;
+    }
+    
+    public Instance getInstance(){
+        return this.inst;
+    }
+    
+    public void setInstance(Instance inst) {
+        this.inst = inst;
     }
 
     @Override

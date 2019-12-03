@@ -15,11 +15,12 @@ import io.exception.OpenFileException;
 import io.exception.ReaderException;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
+
+import modele.Instance;
 
 /**
  * Classe qui permet de lire une instance pour le projet de POO3 2019/2020.
@@ -76,8 +77,10 @@ public class InstanceReader {
         int dureeMax = readIntInLine(scanner, "Duree max");
         Date date = readDateInLine(scanner, "Date");
         ////////////////////////////////////////////
-        // TODO : Vous pouvez creer une instance.
+        // DONE : Vous pouvez creer une instance.
         ////////////////////////////////////////////
+        Instance inst = new Instance(name, dureeMin, dureeMax, date);
+        
         readStringInLine(scanner, new String[]{"Debut", "Fin"});
         // Dans la boucle qui suit, nous allons lire les donnees relatives a chaque tournee.
         while(true) {
