@@ -1,22 +1,53 @@
 package modele;
 
 import java.util.Date;
+import java.io.Serializable;
+import java.util.Objects;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Classe représentant une tournée dans le modèle de données, elle se situe à la
  * base du modèle de données.
  * @author thomas
  */
-public class Tournee {
+@Entity
+@DiscriminatorValue("TOURN")
+public class Tournee implements Serializable {
     /*  PARAMETRES  */
+    private static final long serialVersionUID = 1L;
+    
+    /**
+     * Id pour la table de la base de données
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    
     /**
      * Date de début d'une tournée
      */
+    @Column(name = "DATE_DEBUT")
     private Date debut;
+    
+    /**
+     * Instance à laquelle est liée la tournée. Utilisée pour créer les liens
+     * dans le modèle de données
+     */
+    @ManyToOne
+    @JoinColumn(name="INST_ID")
+    private Instance inst;
     
     /**
      * Date de fin d'une tournée
      */
+    @Column(name = "DATE_FIN")
     private Date fin;
     
     /*  CONSTRUCTEURS  */
@@ -70,6 +101,35 @@ public class Tournee {
 
     public Date getFin() {
         return fin;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.debut);
+        hash = 97 * hash + Objects.hashCode(this.fin);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Tournee other = (Tournee) obj;
+        if (!Objects.equals(this.debut, other.debut)) {
+            return false;
+        }
+        if (!Objects.equals(this.fin, other.fin)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
