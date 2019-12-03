@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 import modele.Instance;
+import modele.Tournee;
 
 /**
  * Classe qui permet de lire une instance pour le projet de POO3 2019/2020.
@@ -64,7 +65,7 @@ public class InstanceReader {
      * @throws ReaderException lorsque les donnees dans le fichier d'instance 
      * sont manquantes ou au mauvais format.
      */
-    public void readInstance() throws ReaderException {
+    public Instance readInstance() throws ReaderException {
         Scanner scanner = null;
         try {
             scanner = new Scanner(instanceFile);
@@ -101,7 +102,10 @@ public class InstanceReader {
             ////////////////////////////////////////////
             // TODO : Vous pouvez ajoutez chacune des tournees a votre instance
             ////////////////////////////////////////////
+            inst.AjouterTournee(new Tournee(elem.getDebut(), elem.getFin()));
         }
+        
+        return inst;
     }
 
     /**
