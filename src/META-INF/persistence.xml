@@ -4,6 +4,8 @@
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <class>modele.Instance</class>
     <class>modele.Tournee</class>
+    <class>modele.Shift</class>
+    <class>modele.Solution</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/Deliver2iBDD"/>
       <property name="javax.persistence.jdbc.user" value="sql123"/>

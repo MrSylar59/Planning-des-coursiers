@@ -3,6 +3,8 @@ package modele;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -59,6 +61,12 @@ public class Instance implements Serializable {
     @OneToMany(mappedBy="inst", cascade = CascadeType.PERSIST)
     private HashSet<Tournee> tournees;
     
+    /**
+     * La liste de toutes les solutions qui ont été trouvées pour une instance
+     */
+    @OneToMany(mappedBy="inst", cascade = CascadeType.PERSIST)
+    private List<Solution> solutions;
+    
     /*  CONSTRUCTEURS  */
     public Instance() {
         this.nom        = "empty";
@@ -66,6 +74,7 @@ public class Instance implements Serializable {
         this.dureeMax   = 0;
         this.date       = new Date();
         this.tournees   = new HashSet<>();
+        this.solutions = new LinkedList<>();
     }
     
     public Instance(String nom, int dureeMin, int dureeMax, Date date) {
@@ -95,7 +104,6 @@ public class Instance implements Serializable {
     }
     
     /*  METHODES  */
-    
     /**
      * Permet d'ajouter une tournée à l'ensemble des tournées de l'instance.
      * Si une tournée est déjà présente dans cet ensemble elle n'est pas ajoutée
@@ -111,15 +119,41 @@ public class Instance implements Serializable {
         t.setInstance(this);
         return this.tournees.add(t);
     }
+    
+    /**
+     * Permet d'ajouter une solution à la liste des solutions de l'instance.
+     * Si la solution est déjà présente dans la liste alors, la nouvelle la remplace
+     * 
+     * @param s la solution à ajouter à la liste des solutions
+     * @return Si l'ajout a bien été effectué, alors elle revoie true et false sinon
+     */
+    public boolean AjouterSolution(Solution s){
+        if (s.getInstance() != this)
+            return false;
+        
+        if (this.solutions.contains(s))
+            this.solutions.remove(s);
+        
+        return this.solutions.add(s);
+    }
+
+    public int getDureeMin() {
+        return dureeMin;
+    }
+
+    public int getDureeMax() {
+        return dureeMax;
+    }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 71 * hash + Objects.hashCode(this.nom);
-        hash = 71 * hash + this.dureeMin;
-        hash = 71 * hash + this.dureeMax;
-        hash = 71 * hash + Objects.hashCode(this.date);
-        hash = 71 * hash + Objects.hashCode(this.tournees);
+        hash = 53 * hash + Objects.hashCode(this.nom);
+        hash = 53 * hash + this.dureeMin;
+        hash = 53 * hash + this.dureeMax;
+        hash = 53 * hash + Objects.hashCode(this.date);
+        hash = 53 * hash + Objects.hashCode(this.tournees);
+        hash = 53 * hash + Objects.hashCode(this.solutions);
         return hash;
     }
 
@@ -148,6 +182,9 @@ public class Instance implements Serializable {
             return false;
         }
         if (!Objects.equals(this.tournees, other.tournees)) {
+            return false;
+        }
+        if (!Objects.equals(this.solutions, other.solutions)) {
             return false;
         }
         return true;

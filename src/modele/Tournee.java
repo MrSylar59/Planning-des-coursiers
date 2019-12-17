@@ -2,6 +2,8 @@ package modele;
 
 import java.util.Date;
 import java.io.Serializable;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 /**
@@ -47,6 +50,12 @@ public class Tournee implements Serializable {
     @ManyToOne
     @JoinColumn(name = "INST_ID")
     private Instance inst;
+    
+    /**
+     * L'ensemble des shifts dans lesquelles apparaissent la tournée.
+     */
+    @ManyToMany(mappedBy = "tournees")
+    private HashSet<Shift> shifts;
     
     /*  CONSTRUCTEURS  */
     public Tournee() {
@@ -93,6 +102,19 @@ public class Tournee implements Serializable {
     }
     
     /*  METHODES  */
+    
+    /**
+     * Méthode qui permet d'ajouter un shift comme faisant partie des shifts utilisant
+     * la tournée. Elle ne doit pas être appellée à part sans avoir appelé la fonction
+     * Shift.AjouterTournee().
+     * 
+     * @param s le shift à ajouter
+     * @return renvoie true si l'ajout s'est bien effectué et false sinon
+     */
+    public boolean AjouterShiftApparition(Shift s){
+        return this.shifts.add(s);
+    }
+    
     public Date getDebut() {
         return debut;
     }
