@@ -11,6 +11,6 @@ import modele.Tournee;
 public class TourneeSort implements Comparator<Tournee> {
     @Override
     public int compare(Tournee t1, Tournee t2) {
-       return 0; // TODO 
+       return t1.getDebut().compareTo(t2.getDebut());
     }
 }

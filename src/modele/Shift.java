@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -48,7 +49,7 @@ public class Shift implements Serializable {
      * Le cout du shift en euros (choix 1min = 1€)
      */
     @Column(name = "PRIX")
-    private int prix;
+    private double prix;
     
     /**
      * La solution à laquelle le shift est lié
@@ -96,22 +97,64 @@ public class Shift implements Serializable {
             return false;
         
         this.tournees.add(t);
+        this.tournees.sort(new TourneeSort());
+        
         this.duree = CalculerDuree();
+        this.tempsMort = CalculerTempsMort();
+        this.prix = CalculerPrix();
         
         return true;
     }
     
+    /**
+     * Fonction qui calcule la durée d'activité d'un shift à partir de ses 
+     * tournées. La liste doit avoir été préalablement triée.
+     * 
+     * Note: tester le comportement de la fonction car risque de perte de précision
+     * avec le cast en int. Mais ne devrait pas poser de problème car unités en
+     * minute.
+     * 
+     * @return la durée en minute qu'un shift est actif (ie. tournée en cours)
+     */
     public int CalculerDuree(){
-        this.tournees.sort(new TourneeSort());
-        return 0;
+        long diff = this.tournees.get(0).getDebut().getTime() -
+                this.tournees.get(this.tournees.size()).getDebut().getTime();
+        
+        return (int)TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS);
+    }
+    
+    /**
+     * Fonction qui calcule le temps mort d'un shift à partir de ses tournées.
+     * La liste doit avoir été préalablement triée.
+     * 
+     * Note: tester le comportement de la fonction car risque de perte de précision
+     * avec le cast en int. Mais ne devrait pas poser de problème car unités en
+     * minute.
+     * 
+     * @return la durée en minute qu'un shift est innactif
+     */
+    public int CalculerTempsMort(){
+        int sum = 0;
+        int max = Math.max(this.solution.getInstance().getDureeMin(), this.duree);
+        
+        for(Tournee t : this.tournees){
+            long diff = t.getFin().getTime() - t.getDebut().getTime();
+            sum += (int)diff;
+        }
+        
+        return max - sum;
+    }
+    
+    public double CalculerPrix(){
+        return (this.duree + this.tempsMort);
     }
 
     @Override
     public int hashCode() {
-        int hash = 5;
+        int hash = 3;
         hash = 83 * hash + this.duree;
         hash = 83 * hash + this.tempsMort;
-        hash = 83 * hash + this.prix;
+        hash = 83 * hash + (int) (Double.doubleToLongBits(this.prix) ^ (Double.doubleToLongBits(this.prix) >>> 32));
         hash = 83 * hash + Objects.hashCode(this.solution);
         hash = 83 * hash + Objects.hashCode(this.tournees);
         return hash;
@@ -135,7 +178,7 @@ public class Shift implements Serializable {
         if (this.tempsMort != other.tempsMort) {
             return false;
         }
-        if (this.prix != other.prix) {
+        if (Double.doubleToLongBits(this.prix) != Double.doubleToLongBits(other.prix)) {
             return false;
         }
         if (!Objects.equals(this.solution, other.solution)) {
@@ -146,7 +189,7 @@ public class Shift implements Serializable {
         }
         return true;
     }
-
+    
     
 
     @Override
