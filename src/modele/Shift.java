@@ -153,6 +153,10 @@ public class Shift implements Serializable {
         return (this.duree + this.tempsMort);
     }
 
+    public double getPrix() {
+        return prix;
+    }
+
     @Override
     public int hashCode() {
         int hash = 3;
