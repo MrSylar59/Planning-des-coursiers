@@ -70,11 +70,15 @@ public class Shift implements Serializable {
     private List<Tournee> tournees;
     
     /*  CONSTRUCTEURS  */
-    public Shift(Solution solution){
+    public Shift(){
         this.prix = 0;
         this.duree = 0;
         this.tempsMort = 0;
         this.tournees = new LinkedList<>();
+    }
+    
+    public Shift(Solution solution){
+        this();
         if (solution != null)
             this.solution = solution;
     }

@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 /**
@@ -42,7 +43,7 @@ public class Solution implements Serializable {
     /**
      * L'instance pour laquelle la solution s'applique
      */
-    @Column(name = "INST_ID")
+    @JoinColumn(name = "INST_ID")
     private Instance inst;
     
     /**
@@ -52,9 +53,13 @@ public class Solution implements Serializable {
     private HashSet<Shift> shifts;
     
     /*  CONSTRUCTEURS  */
-    public Solution(Instance inst, String algo){
+    public Solution() {
         this.prix = 0;
         this.shifts = new HashSet<>();
+    }
+    
+    public Solution(Instance inst, String algo){
+        this();
         
         if (inst != null)
             this.inst = inst;
