@@ -11,7 +11,10 @@
       <property name="javax.persistence.jdbc.user" value="sql123"/>
       <property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
       <property name="javax.persistence.jdbc.password" value="sql123"/>
+<<<<<<< HEAD
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
+=======
+>>>>>>> dev
     </properties>
   </persistence-unit>
 </persistence>

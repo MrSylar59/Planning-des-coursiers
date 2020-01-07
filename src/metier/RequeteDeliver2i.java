@@ -60,19 +60,31 @@ public class RequeteDeliver2i {
         Statement stmt = connection.createStatement();
         ResultSet result = stmt.executeQuery(requete);
         while(result.next()){
-            lInstance.add(new Instance(result.getString("NOM"), result.getInt("DUR_MIN"),result.getInt("DUR_MAX") ,result.getDate("DATE") ));
+            lInstance.add(new Instance(result.getLong("ID"),result.getString("NOM"), result.getInt("DUR_MIN"),result.getInt("DUR_MAX") ,result.getDate("DATE") ));
         }
         return lInstance;
     }
     
     public Tournee getTourneebyId(int id) throws SQLException{
-        String requete = "SELECT * FROM Tournee WHERE id = %";
+        String requete = "SELECT * FROM Tournee WHERE id = ?";
         PreparedStatement stmt = connection.prepareStatement(requete);       
         stmt.setString(1, ""+id+"");
-        ResultSet result = stmt.executeQuery(requete);
+        ResultSet result = stmt.executeQuery();
         Tournee tournee;
         tournee = new Tournee(result.getDate("debut"),result.getDate("fin"));
         return tournee;
+    }
+    
+    public List<Tournee> getTourneebyInstance(Long id) throws SQLException{
+        List<Tournee> lTournee = new ArrayList<>();
+        String requete = "SELECT * FROM Tournee WHERE INST_ID = ?";
+        PreparedStatement stmt = connection.prepareStatement(requete);       
+        stmt.setLong(1, id);
+        ResultSet result = stmt.executeQuery();
+        while(result.next()){
+            lTournee.add(new Tournee(result.getDate("DATE_DEBUT"), result.getDate("DATE_FIN")));
+        }
+        return lTournee;
     }
     
     public Shift getShiftbyId(int id) throws SQLException{ //à end
