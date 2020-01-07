@@ -60,8 +60,7 @@ public class Accueil extends javax.swing.JFrame {
                 modele.addElement(instance);
             });
             InstanceList.setModel(modele);
-        } catch (SQLException ex) {
-            
+        } catch (SQLException ex) {           
         }
     }
 

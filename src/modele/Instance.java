@@ -77,6 +77,34 @@ public class Instance implements Serializable {
         this.solutions = new LinkedList<>();
     }
     
+    public Instance(Long id,String nom, int dureeMin, int dureeMax, Date date) {
+        this();
+        boolean warn = false;
+        
+        this.id = id;
+        
+        if (nom != null && !nom.isEmpty())
+            this.nom = nom;
+        else
+            warn = true;
+        
+        if (dureeMin > 0 && dureeMax >= dureeMin){
+            this.dureeMin = dureeMin;
+            this.dureeMax = dureeMax;
+        }
+        else
+            warn = true;
+        
+        if (date != null)
+            this.date = date;
+        else
+            warn = true;
+        
+        if (warn)
+            System.out.println("[WARNING] Passed invalid argument to "
+                    + "Instance(String, int, int, Date) defaulted to Instance()");
+    }
+    
     public Instance(String nom, int dureeMin, int dureeMax, Date date) {
         this();
         boolean warn = false;
@@ -136,6 +164,10 @@ public class Instance implements Serializable {
         
         return this.solutions.add(s);
     }
+    
+    public long getId(){
+        return id;
+    } 
 
     public String getNom() {
         return nom;
