@@ -60,7 +60,7 @@ public class RequeteDeliver2i {
         Statement stmt = connection.createStatement();
         ResultSet result = stmt.executeQuery(requete);
         while(result.next()){
-            
+            lInstance.add(new Instance(result.getString("NOM"), result.getInt("DUR_MIN"),result.getInt("DUR_MAX") ,result.getDate("DATE") ));
         }
         return lInstance;
     }
