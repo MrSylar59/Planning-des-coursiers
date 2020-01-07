@@ -100,7 +100,7 @@ public class InstanceReader {
             // Nous obtenons donc des dates au format jj/mm/aaaa hh:mm
             
             ////////////////////////////////////////////
-            // TODO : Vous pouvez ajoutez chacune des tournees a votre instance
+            // DONE : Vous pouvez ajoutez chacune des tournees a votre instance
             ////////////////////////////////////////////
             inst.AjouterTournee(new Tournee(elem.getDebut(), elem.getFin()));
         }

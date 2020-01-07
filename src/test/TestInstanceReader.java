@@ -28,9 +28,8 @@ public class TestInstanceReader {
             final EntityTransaction et = em.getTransaction();
             try {
                 // creation d’une entite persistante
-                InstanceReader rd = new InstanceReader("C:\\Users\\thoma"
-                    + "\\Documents\\POO"
-                    + "\\PlanningCoursiers\\tests\\instances\\instance_test.csv");
+                InstanceReader rd = new InstanceReader("C:\\Users\\cyril\\"+
+                "Local Sites\\Planning-des-coursiers\\tests\\instances\\instance_test.csv");
                 Instance inst = rd.readInstance();
                 
                 et.begin();
