@@ -1,6 +1,7 @@
 package modele;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -149,12 +150,34 @@ public class Shift implements Serializable {
         return max - sum;
     }
     
+    /**
+     * Fonction qui renvoie la date à laquelle se termine un shift
+     * 
+     * @return la date de fin d'un shift
+     */
+    public Date DateFinShift() {
+        return tournees.get(tournees.size()-1).getFin(); // car les tournées sont triées
+    }
+    
+    /**
+     * Fonction qui renvoie la date à laquelle un shift débute
+     * 
+     * @return la date de début d'un shift
+     */
+    public Date DateDebutShift() {
+        return tournees.get(0).getDebut(); // car les tournées sont triées
+    }
+    
     public double CalculerPrix(){
         return (this.duree + this.tempsMort);
     }
 
     public double getPrix() {
         return prix;
+    }
+
+    public int getDuree() {
+        return duree;
     }
 
     @Override

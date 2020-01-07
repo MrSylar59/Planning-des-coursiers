@@ -2,9 +2,9 @@ package modele;
 
 import java.util.Date;
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -115,6 +115,18 @@ public class Tournee implements Serializable {
         return this.shifts.add(s);
     }
     
+    /**
+     * Fonction qui permet de savoir si une tournée est compatible avec un shift
+     * déjà pré-existant ou non
+     * 
+     * @param s le shift avec lequel on souhaite tester la compatiblité
+     * @return true si deux tournées sont compatibles et false sinon
+     */
+    public boolean compatible(Shift s){
+        return !this.debut.before(s.DateFinShift()) 
+                || !this.fin.after(s.DateDebutShift());
+    }
+    
     public Date getDebut() {
         return debut;
     }
@@ -125,6 +137,11 @@ public class Tournee implements Serializable {
     
     public Instance getInstance(){
         return this.inst;
+    }
+    
+    public int getDuree(){
+        long diff = this.fin.getTime() - this.debut.getTime();
+        return (int)TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS);
     }
     
     public void setInstance(Instance inst) {

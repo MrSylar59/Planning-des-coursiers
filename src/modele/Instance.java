@@ -149,6 +149,10 @@ public class Instance implements Serializable {
         return dureeMax;
     }
 
+    public HashSet<Tournee> getTournees() {
+        return tournees;
+    }
+
     @Override
     public int hashCode() {
         int hash = 7;
