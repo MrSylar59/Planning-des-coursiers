@@ -21,8 +21,8 @@ import modele.Instance;
  */
 public class Accueil extends javax.swing.JFrame {
 
-    final EntityManagerFactory emf = Persistence.createEntityManagerFactory("PlanningCoursiersPU");
-    final EntityManager em = emf.createEntityManager();
+    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("PlanningCoursiersPU");
+    private final EntityManager em = emf.createEntityManager();
     private RequeteDeliver2i requeteDeliver2i;
     /**
      * ouvre une fenêtre Accueil
@@ -143,6 +143,11 @@ public class Accueil extends javax.swing.JFrame {
         JDialog importInstance = new ImportInstance(this,true);
     }//GEN-LAST:event_importButtonMouseClicked
 
+    
+    public EntityManager getEm(){
+        return this.em;
+    }
+    
     public static void main(String args[]) {
         ///////////////////////////////////////////////
         /// GENERATED CODE STARTS HERE

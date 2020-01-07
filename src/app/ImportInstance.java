@@ -6,7 +6,6 @@
 package app;
 
 import java.awt.Color;
-import java.io.File;
 import java.sql.SQLException;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -15,6 +14,8 @@ import io.InstanceReader;
 import io.exception.ReaderException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import modele.Instance;
 
 /**
@@ -24,11 +25,17 @@ import modele.Instance;
 public class ImportInstance extends javax.swing.JDialog {
 
     private RequeteDeliver2i requeteDeliver2i;
+    
+    private EntityManager em;
+    
     /**
      * Creates new form ImportInstance
      */
     public ImportInstance(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        
+        this.em = ((Accueil)parent).getEm();
+        
         initComponents();
         initialisationFenetre();
         initConnexion();
@@ -92,18 +99,13 @@ public class ImportInstance extends javax.swing.JDialog {
             String selectedFile = importInstanceButton.getSelectedFile().getAbsolutePath();
             try {
                 InstanceReader instanceReader = new InstanceReader(selectedFile);
-                Instance instance = instanceReader.readInstance();
-                /*et.begin();
+                Instance inst = instanceReader.readInstance();
+
+                final EntityTransaction et = em.getTransaction();
                 
+                et.begin();
                 em.persist(inst);
-                
-                et.commit();*/
-                
-                ////////////////////////////////////////////////////////
-                /////
-                ///// TODO : ajouter dans la base récupérer em à partir de Accueil
-                /////
-                ///////////////////////////////////////////////////////
+                et.commit();
                 
             } catch (ReaderException ex) {
                 Logger.getLogger(ImportInstance.class.getName()).log(Level.SEVERE, null, ex);//erreur fichier
