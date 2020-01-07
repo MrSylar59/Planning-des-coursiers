@@ -99,6 +99,11 @@ public class Accueil extends javax.swing.JFrame {
 
         afficherInstanceButton.setText("Afficher l'instance");
         afficherInstanceButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        afficherInstanceButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                afficherInstanceButtonMouseClicked(evt);
+            }
+        });
 
         supprimerInstanceButton.setText("Supprimer l'instance");
         supprimerInstanceButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -141,8 +146,16 @@ public class Accueil extends javax.swing.JFrame {
 
     private void importButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_importButtonMouseClicked
         JDialog importInstance = new ImportInstance(this,true);
+        remplirInstanceList();
     }//GEN-LAST:event_importButtonMouseClicked
 
+    private void afficherInstanceButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_afficherInstanceButtonMouseClicked
+        if(InstanceList.getSelectedValue() != null){
+            AfficherInstance Fenetre = new AfficherInstance(InstanceList.getSelectedValue());
+        }
+    }//GEN-LAST:event_afficherInstanceButtonMouseClicked
+
+    
     
     public EntityManager getEm(){
         return this.em;

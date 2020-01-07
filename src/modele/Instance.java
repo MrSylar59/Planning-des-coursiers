@@ -137,6 +137,10 @@ public class Instance implements Serializable {
         return this.solutions.add(s);
     }
 
+    public String getNom() {
+        return nom;
+    }    
+
     public int getDureeMin() {
         return dureeMin;
     }
@@ -192,7 +196,6 @@ public class Instance implements Serializable {
 
     @Override
     public String toString() {
-        return "Instance{" + "nom=" + nom + ", dureeMin=" + dureeMin + ", "
-                + "dureeMax=" + dureeMax + ", date=" + date + '}';
+        return nom;
     }
 }
