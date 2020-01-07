@@ -74,12 +74,14 @@ public class Solution implements Serializable {
     }
     
     /**
-     * TODO: retravailler la fonction pour la faire marcher plus logiquement
+     * Fonction qui ajoute un shift à la liste des solution. Ajouter un shift
+     * modifie le prix de la solution.
      * 
-     * @param s
-     * @return 
+     * @param s le shift à ajouter à une solution
+     * @return renvoie true si l'ajout a été fait et false sinon
      */
     public boolean AjouterShift(Shift s){
+        this.prix += s.getPrix();
         return this.shifts.add(s);
     }
 
