@@ -12,6 +12,8 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 import modele.Instance;
+import modele.Solution;
+import metier.AlgoOrdonnancement;
 
 /**
  *
@@ -19,7 +21,7 @@ import modele.Instance;
  */
 public class TestInstanceReader {
     public static void main(String[] args) {
-        
+        Instance inst = null;
         final EntityManagerFactory emf = 
                 Persistence.createEntityManagerFactory("PlanningCoursiersPU");
         final EntityManager em = emf.createEntityManager();
@@ -28,13 +30,22 @@ public class TestInstanceReader {
             final EntityTransaction et = em.getTransaction();
             try {
                 // creation d’une entite persistante
-                InstanceReader rd = new InstanceReader("C:\\Users\\cyril\\"+
-                "Local Sites\\Planning-des-coursiers\\tests\\instances\\instance_test.csv");
-                Instance inst = rd.readInstance();
+                InstanceReader rd = new InstanceReader("C:\\Users\\thoma\\Documents\\"+
+                "POO\\PlanningCoursiers\\tests\\instances\\instance_test.csv");
+                inst = rd.readInstance();
+                
+                AlgoOrdonnancement ord = new AlgoOrdonnancement(inst);
+                ord.ordonnancer();
+                System.out.println();
+                System.out.println("MES TESTS");
+                System.out.println(ord);
+                System.out.println("FIN MES TESTS");
+                System.out.println();
                 
                 et.begin();
                 
                 em.persist(inst);
+                em.persist(ord.getSolution());
                 
                 et.commit();
 

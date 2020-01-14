@@ -1,7 +1,8 @@
 package modele;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -50,12 +51,12 @@ public class Solution implements Serializable {
      * L'ensemble des shifts devant être réalisés dans la solution
      */
     @OneToMany(mappedBy="solution", cascade = CascadeType.PERSIST)
-    private HashSet<Shift> shifts;
+    private List<Shift> shifts;
     
     /*  CONSTRUCTEURS  */
     public Solution() {
         this.prix = 0;
-        this.shifts = new HashSet<>();
+        this.shifts = new LinkedList<>();
     }
     
     public Solution(Instance inst, String algo){
@@ -124,6 +125,13 @@ public class Solution implements Serializable {
 
     @Override
     public String toString() {
-        return "Solution{" + "prix=" + prix + ", algo=" + algo + '}';
+        String str = "";
+        
+        for (Shift s : this.shifts){
+            str += s;
+            str += "\n";
+        }
+        
+        return "Solution{" + "prix=" + prix + ", algo=" + algo + ", shifts=\n" + str + '}';
     }
 }

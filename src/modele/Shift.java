@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -62,9 +63,14 @@ public class Shift implements Serializable {
     /**
      * L'ensemble des tournées apparaissant dans ce shift
      */
-    @ManyToMany
+    @ManyToMany(
+            cascade = {
+                CascadeType.PERSIST,
+                CascadeType.MERGE
+            }
+    )
     @JoinTable(
-            name = "TOURNEE-SHIFT",
+            name = "TOURNEE_SHIFT",
             joinColumns = @JoinColumn(name = "SHIFT_ID"),
             inverseJoinColumns = @JoinColumn(name = "TOURNEE_ID")
     )
@@ -92,16 +98,44 @@ public class Shift implements Serializable {
      * contrairement à la fonction Tournee.AjouterShiftApparition()
      * 
      * @param t la tournée à ajouter
-     * @return renvoie true si l'association s'ets bien passé et alse sinon
+     * @return renvoie true si l'association s'est bien passé et false sinon
      */
     public boolean AjouterTournee(Tournee t){
-        if (!t.AjouterShiftApparition(this))
-            return false;
+        //if (!t.AjouterShiftApparition(this))
+         //   return false;
+            
         
-        if(!this.tournees.contains(t))
+        if(this.tournees.contains(t))
             return false;
         
         this.tournees.add(t);
+        this.tournees.sort(new TourneeSort());
+        
+        this.duree = CalculerDuree();
+        this.tempsMort = CalculerTempsMort();
+        this.prix = CalculerPrix();
+        
+        return true;
+    }
+    
+    /**
+     * Méthode qui permet de retirer une tournée à l'ensemble des tournées d'un
+     * shift. Elle conserve la relation 1..*-1..* prévu dns le modèle relationnel
+     * contrairement à la fonction Tournee.SupprimerShiftApparition()
+     * 
+     * @param t la tournée à retirer
+     * @return renvoie true si le retrait s'est bien passé et false sinon
+     */
+    public boolean SupprimerTournee(Tournee t){
+        //if (!t.SupprimerShiftApparition(this))
+          //  return false;
+        
+        if(!this.tournees.contains(t))
+            return false;
+            
+        
+        
+        this.tournees.remove(t);
         this.tournees.sort(new TourneeSort());
         
         this.duree = CalculerDuree();
@@ -122,8 +156,8 @@ public class Shift implements Serializable {
      * @return la durée en minute qu'un shift est actif (ie. tournée en cours)
      */
     public int CalculerDuree(){
-        long diff = this.tournees.get(0).getDebut().getTime() -
-                this.tournees.get(this.tournees.size()).getDebut().getTime();
+        long diff = this.tournees.get(this.tournees.size()-1).getFin().getTime() -
+                this.tournees.get(0).getDebut().getTime();
         
         return (int)TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS);
     }
@@ -139,15 +173,15 @@ public class Shift implements Serializable {
      * @return la durée en minute qu'un shift est innactif
      */
     public int CalculerTempsMort(){
-        int sum = 0;
+        long sum = 0;
         int max = Math.max(this.solution.getInstance().getDureeMin(), this.duree);
         
         for(Tournee t : this.tournees){
             long diff = t.getFin().getTime() - t.getDebut().getTime();
-            sum += (int)diff;
+            sum += diff;
         }
         
-        return max - sum;
+        return max - (int)(sum/60/1000);
     }
     
     /**
@@ -156,7 +190,11 @@ public class Shift implements Serializable {
      * @return la date de fin d'un shift
      */
     public Date DateFinShift() {
-        return tournees.get(tournees.size()-1).getFin(); // car les tournées sont triées
+        if (!tournees.isEmpty()){
+            return tournees.get(tournees.size()-1).getFin(); // car les tournées sont triées
+        }
+        
+        return new Date(0);
     }
     
     /**
@@ -166,6 +204,10 @@ public class Shift implements Serializable {
      */
     public Date DateDebutShift() {
         return tournees.get(0).getDebut(); // car les tournées sont triées
+    }
+    
+    public boolean TourneesVide(){
+        return tournees.isEmpty();
     }
     
     public double CalculerPrix(){
@@ -225,6 +267,14 @@ public class Shift implements Serializable {
 
     @Override
     public String toString() {
-        return "Shift{" + "duree=" + duree + ", tempsMort=" + tempsMort + ", prix=" + prix + '}';
+        
+        String str = "";
+        
+        for (Tournee t : this.tournees){
+            str += t;
+            str += "\n";
+        }
+        
+        return "Shift{" + "duree=" + duree + ", tempsMort=" + tempsMort + ", prix=" + prix  + "\ntournees=\n" + str + "}";
     }
 }

@@ -16,13 +16,11 @@ public class AlgoOrdonnancement {
     /*  PARAMETRES  */
     private Solution solution;
     private Instance instance;
-    private List<Shift> shifts;
     
     /*  CONSTRUCTEURS  */
     public AlgoOrdonnancement(Instance inst) {
         this.instance = inst;
         this.solution = new Solution(instance, "Algo1");
-        this.shifts = new LinkedList<>();
     }
     
     /*  METHODES  */
@@ -31,18 +29,36 @@ public class AlgoOrdonnancement {
         Shift s = new Shift(solution);
         
         for (Tournee t : tournees){
-            if (s.getDuree() + t.getDuree() < instance.getDureeMax() && t.compatible(s)){
+            if (t.compatible(s)){
                 s.AjouterTournee(t);
+                if (s.getDuree() > this.instance.getDureeMax()){
+                    System.out.println(s.getDuree() + " > " + this.instance.getDureeMax());
+                    s.SupprimerTournee(t);
+                    System.out.println("Je supprime la dernière tournée:\n" + t);
+                }
+                else {
+                    System.out.println("J'ajoute un shift");
+                    solution.AjouterShift(s);
+                    s = new Shift(solution);
+                    s.AjouterTournee(t);
+                } 
             }
             else {
-                shifts.add(s);
+                System.out.println("J'ajoute un shift");
+                solution.AjouterShift(s);
                 s = new Shift(solution);
                 s.AjouterTournee(t);
             }
         }
+        solution.AjouterShift(s);
     }
 
     public Solution getSolution() {
         return solution;
+    }
+
+    @Override
+    public String toString() {
+        return "AlgoOrdonnancement{" + "solution=" + solution + "}";
     }
 }

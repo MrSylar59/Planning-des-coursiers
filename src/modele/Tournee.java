@@ -61,6 +61,7 @@ public class Tournee implements Serializable {
     public Tournee() {
         this.debut  = new Date();
         this.fin    = new Date();
+        this.shifts = new HashSet<>();
     }
     
     /**
@@ -111,9 +112,21 @@ public class Tournee implements Serializable {
      * @param s le shift à ajouter
      * @return renvoie true si l'ajout s'est bien effectué et false sinon
      */
-    public boolean AjouterShiftApparition(Shift s){
+    /*public boolean AjouterShiftApparition(Shift s){
         return this.shifts.add(s);
-    }
+    }*/
+    
+    /**
+     * Méthode qui permet de retirer un shift  des shifts utilisant la tournée. 
+     * Elle ne doit pas être appellée à part sans avoir appelé la fonction
+     * Shift.SupprimerTournee().
+     * 
+     * @param s le shift à retirer
+     * @return renvoie true si le retrait s'est bien effectué et false sinon
+     */
+    /*public boolean SupprimerShiftApparition(Shift s){
+        return this.shifts.remove(s);
+    }*/
     
     /**
      * Fonction qui permet de savoir si une tournée est compatible avec un shift
@@ -123,8 +136,10 @@ public class Tournee implements Serializable {
      * @return true si deux tournées sont compatibles et false sinon
      */
     public boolean compatible(Shift s){
-        return !this.debut.before(s.DateFinShift()) 
-                || !this.fin.after(s.DateDebutShift());
+        if (s.TourneesVide())
+            return true;
+        return this.fin.before(s.DateDebutShift()) 
+                  || this.debut.after(s.DateFinShift());
     }
     
     public Date getDebut() {
