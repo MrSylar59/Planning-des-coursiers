@@ -32,19 +32,13 @@ public class AlgoOrdonnancement {
             if (t.compatible(s)){
                 s.AjouterTournee(t);
                 if (s.getDuree() > this.instance.getDureeMax()){
-                    System.out.println(s.getDuree() + " > " + this.instance.getDureeMax());
                     s.SupprimerTournee(t);
-                    System.out.println("Je supprime la dernière tournée:\n" + t);
                 }
                 else {
-                    System.out.println("J'ajoute un shift");
-                    solution.AjouterShift(s);
-                    s = new Shift(solution);
                     s.AjouterTournee(t);
                 } 
             }
             else {
-                System.out.println("J'ajoute un shift");
                 solution.AjouterShift(s);
                 s = new Shift(solution);
                 s.AjouterTournee(t);

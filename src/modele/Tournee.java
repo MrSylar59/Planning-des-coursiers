@@ -138,8 +138,11 @@ public class Tournee implements Serializable {
     public boolean compatible(Shift s){
         if (s.TourneesVide())
             return true;
-        return this.fin.before(s.DateDebutShift()) 
-                  || this.debut.after(s.DateFinShift());
+        
+        return this.fin.before(s.DateDebutShift())
+                || this.fin.equals(s.DateDebutShift())
+                || this.debut.after(s.DateFinShift()) 
+                || this.debut.equals(s.DateFinShift());
     }
     
     public Date getDebut() {
