@@ -30,8 +30,8 @@ public class TestInstanceReader {
             final EntityTransaction et = em.getTransaction();
             try {
                 // creation d’une entite persistante
-                InstanceReader rd = new InstanceReader("C:\\Users\\thoma\\Documents\\"+
-                "POO\\PlanningCoursiers\\tests\\instances\\instance_test.csv");
+                InstanceReader rd = new InstanceReader("C:\\Users\\Cyril\\Documents\\"+
+                "NetBeansProjects\\Planning-des-coursiers\\tests\\instances\\instance_test.csv");
                 inst = rd.readInstance();
                 
                 AlgoOrdonnancement ord = new AlgoOrdonnancement(inst);

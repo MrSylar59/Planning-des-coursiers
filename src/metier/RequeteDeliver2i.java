@@ -82,7 +82,7 @@ public class RequeteDeliver2i {
         stmt.setLong(1, id);
         ResultSet result = stmt.executeQuery();
         while(result.next()){
-            lTournee.add(new Tournee(result.getDate("DATE_DEBUT"), result.getDate("DATE_FIN")));
+            lTournee.add(new Tournee(result.getTime("DATE_DEBUT"), result.getTime("DATE_FIN")));
         }
         return lTournee;
     }

@@ -24,6 +24,7 @@ public class AfficherInstance extends javax.swing.JFrame {
     
     private RequeteDeliver2i requeteDeliver2i;
     private Instance instance;
+    private ZoneDessin dessin;
     /**
      * Creates new form AfficherInstance
      */
@@ -33,18 +34,20 @@ public class AfficherInstance extends javax.swing.JFrame {
     
     public AfficherInstance(Instance instance) {
         initComponents();
+        this.instance = instance;
         initialisationFenetre();
         initConnexion();
-        this.instance = instance;
         remplirFenetre();
     }
 
     private void initialisationFenetre() {
         this.setVisible(true); // Rendre visible
-        this.setSize(800, 600); // Défini la taille
+        this.setSize(1400, 900); // Défini la taille
         this.setLocationRelativeTo(null); // Centre la fenêtre
         this.getContentPane().setBackground(new Color(255, 227, 171));
         this.setTitle("Deliver2i");
+        this.dessin = new ZoneDessin(instance);
+        this.getContentPane().add(dessin);
     }
     
     private void initConnexion(){
