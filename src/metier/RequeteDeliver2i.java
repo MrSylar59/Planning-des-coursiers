@@ -87,6 +87,16 @@ public class RequeteDeliver2i {
         return lTournee;
     }
     
+    public Solution getSolution(int id, String algo) throws SQLException{
+        String requete = "SELECT * FROM Solution WHERE INST_ID = ? AND ALGO = \"?\"";
+        PreparedStatement stmt = connection.prepareStatement(requete);       
+        stmt.setInt(1, id);     
+        stmt.setString(1, algo);
+        ResultSet result = stmt.executeQuery();
+        Solution solution = new Solution();//TODO créer sol et return
+        return solution;
+    }
+    
     public Shift getShiftbyId(int id) throws SQLException{ //à end
         /*String requete = "SELECT * FROM Shift WHERE id = %";
         PreparedStatement stmt = connection.prepareStatement(requete);       

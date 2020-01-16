@@ -48,6 +48,16 @@ public class Graphe {
     public int getDebut(){
         return debut;
     }
+
+    public Droite getAbscisse() {
+        return abscisse;
+    }
+
+    public Droite getOrdonnee() {
+        return ordonnee;
+    }
+    
+    
     
     public void seDessiner(Graphics g){
         abscisse.seDessiner(g);

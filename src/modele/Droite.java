@@ -23,6 +23,16 @@ public class Droite{
         this.fin = fin;		
     }
 
+    public Point getDebut() {
+        return debut;
+    }
+
+    public Point getFin() {
+        return fin;
+    }
+
+    
+    
     public void seDessiner(Graphics g){
         g.drawLine(debut.getX(), debut.getY(), fin.getX(), fin.getY());
     }

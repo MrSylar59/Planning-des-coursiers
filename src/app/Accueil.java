@@ -7,9 +7,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import metier.EnumAlgo;
 import metier.RequeteDeliver2i;
 import modele.Instance;
 
@@ -63,6 +65,8 @@ public class Accueil extends javax.swing.JFrame {
         } catch (SQLException ex) {           
         }
     }
+    
+   
 
     /**
      * This method is called from within the constructor to initialize the form.

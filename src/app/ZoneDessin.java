@@ -12,18 +12,21 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
+import metier.EnumAlgo;
 import metier.RequeteDeliver2i;
 import modele.Graphe;
 import modele.Instance;
 import modele.Point;
 import modele.Rectangle;
 import modele.Tournee;
+import modele.Solution;
 
 /**
  *
  * @author cyril
  */
 public class ZoneDessin extends javax.swing.JPanel {
+    private Instance instance;
     private Graphe graphe;
     private List<Rectangle> lRectangle;
     private RequeteDeliver2i requeteDeliver2i;
@@ -36,8 +39,13 @@ public class ZoneDessin extends javax.swing.JPanel {
         initConnexion();
         System.out.println("Test");
         System.out.println(instance);
+        this.instance = instance;
         this.setBackground(Color.white);
-        this.setBounds(25, 50, 900, 700);
+        this.setBounds(25, 100, 1300, 600);
+        afficherDefault();
+    }
+    
+    private void afficherDefault(){
         Point haut_gauche = new Point(30,100);
         Point bas_droite = new Point(1000,550);
         try{
@@ -62,11 +70,10 @@ public class ZoneDessin extends javax.swing.JPanel {
             for (int i = 0; i < lTournee.size(); i++) {
                 long diff_milli = (lTournee.get(i).getFin().getTime()-lTournee.get(i).getDebut().getTime());
                 int diff_min = Math.toIntExact(diff_milli/60000);
-                long deb = (lTournee.get(i).getDebut().getTime()-graphe.getDebut());
-                int deb_min = Math.toIntExact(deb/60000);
+                long deb = (Math.toIntExact(lTournee.get(i).getDebut().getTime()/60000)-graphe.getDebut());
+                int deb_min = Math.toIntExact(deb);
                 Point origine = new Point(graphe.getOrigine().getX()+deb_min*graphe.getWidth(),
                         graphe.getOrigine().getY()-(i+1)*graphe.getHeight());
-                System.out.println("height="+graphe.getHeight()+" width="+graphe.getWidth());
                 Rectangle rect = new Rectangle(Color.blue,origine,diff_min*graphe.getWidth(),graphe.getHeight());
                 this.lRectangle.add(rect);
             }
@@ -79,13 +86,28 @@ public class ZoneDessin extends javax.swing.JPanel {
     protected void paintComponent(Graphics g) {
         // TODO Auto-generated method stub
         super.paintComponent(g);
-        System.out.println("graphe");
         graphe.seDessiner(g);
         for(Rectangle rectangle : lRectangle){
-            System.out.println(rectangle.getpHautGauche().getX()+" "+rectangle.getpHautGauche().getY()+" "+rectangle.getWidth()+" "+rectangle.getHeight());
+            //System.out.println(rectangle.getpHautGauche().getX()+" "+rectangle.getpHautGauche().getY()+" "+rectangle.getWidth()+" "+rectangle.getHeight());
             rectangle.seDessiner(g);
         }
     }
+    
+    public void afficherAlgo(EnumAlgo algo){
+        switch(algo){
+            case AlgoOrdonnancement:
+                try{
+                    Solution solution = requeteDeliver2i.getSolution(instance.getId(),"Algo1");
+                }catch(SQLException){
+                    
+                }
+            break;
+            case Default:
+                afficherDefault();
+            break;
+        }
+    }
+    
 
     private void initConnexion(){
         try {
