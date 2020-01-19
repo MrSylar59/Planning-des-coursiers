@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import modele.Instance;
 import modele.Tournee;
@@ -99,6 +100,18 @@ public class RequeteDeliver2i {
     
     public List<Tournee> getTourneebyInstance(Long id) throws SQLException{
         List<Tournee> lTournee = new ArrayList<>();
+        String requete = "SELECT * FROM Tournee WHERE INST_ID = ?";
+        PreparedStatement stmt = connection.prepareStatement(requete);       
+        stmt.setLong(1, id);
+        ResultSet result = stmt.executeQuery();
+        while(result.next()){
+            lTournee.add(new Tournee(result.getTime("DATE_DEBUT"), result.getTime("DATE_FIN")));
+        }
+        return lTournee;
+    }
+    
+    public HashSet<Tournee> getTournees(Long id) throws SQLException{
+        HashSet<Tournee> lTournee = new HashSet<>();
         String requete = "SELECT * FROM Tournee WHERE INST_ID = ?";
         PreparedStatement stmt = connection.prepareStatement(requete);       
         stmt.setLong(1, id);

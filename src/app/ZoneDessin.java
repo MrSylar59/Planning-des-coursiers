@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import metier.Algo2;
 import metier.EnumAlgo;
@@ -27,6 +28,8 @@ import modele.Tournee;
 import modele.Shift;
 import modele.Solution;
 import metier.AlgoOrdonnancement;
+import java.text.DecimalFormat;
+import metier.Algo3;
 
 /**
  *
@@ -97,9 +100,26 @@ public class ZoneDessin extends javax.swing.JPanel {
         // TODO Auto-generated method stub
         super.paintComponent(g);
         graphe.seDessiner(g);
+        afficherHeure();
         for(Rectangle rectangle : lRectangle){
             //System.out.println(rectangle.getpHautGauche().getX()+" "+rectangle.getpHautGauche().getY()+" "+rectangle.getWidth()+" "+rectangle.getHeight());
             rectangle.seDessiner(g);
+        }
+    }
+    
+    private void afficherHeure(){
+        int heure_debut = Math.toIntExact(graphe.getDebut()/60)+1;
+        int minute_debut = graphe.getDebut()%60;
+        DecimalFormat formater = new DecimalFormat("00");
+        JLabel label = new JLabel(heure_debut+":"+formater.format(minute_debut));
+        label.setBounds(graphe.getOrigine().getX()-10, graphe.getOrigine().getY()+10, 100, 20);
+        this.add(label);
+        int i=0;
+        while( i < 23-heure_debut){
+            i++;
+            label = new JLabel((heure_debut+i)+":"+formater.format(minute_debut));
+            label.setBounds(graphe.getOrigine().getX()-10+(graphe.getWidth()*60*i), graphe.getOrigine().getY()+10, 100, 20);
+            this.add(label);
         }
     }
     
@@ -138,6 +158,29 @@ public class ZoneDessin extends javax.swing.JPanel {
                         lshift = requeteDeliver2i.getShift(instance.getId(),"Algo2");
                     }
                     Solution sol = requeteDeliver2i.getSolutionbyInstance(instance.getId(),"Algo2");
+                    jLabel1.setText("prix = "+sol.getPrix());
+                    Point haut_gauche = new Point(30,100);
+                    Point bas_droite = new Point(1000,550);
+                    int min_debut = requeteDeliver2i.getMinDebutInstance(instance);
+                    int max_fin = requeteDeliver2i.getMaxFinInstance(instance);
+                    this.graphe = new Graphe(haut_gauche, bas_droite, min_debut, max_fin, lshift.size());
+                    this.lRectangle = createRectangleByShift(lshift);
+                    
+                }catch(SQLException ex){
+                    
+                }
+                repaint();
+            break;
+            case Algo3:
+                try{
+                    List<Shift> lshift = requeteDeliver2i.getShift(instance.getId(),"Algo3");
+                    if(lshift == null){
+                        Algo3 algo3 = new Algo3(instance);
+                        algo3.ordonnancer();
+                        algo3.ajouterEnBase(em);
+                        lshift = requeteDeliver2i.getShift(instance.getId(),"Algo3");
+                    }
+                    Solution sol = requeteDeliver2i.getSolutionbyInstance(instance.getId(),"Algo3");
                     jLabel1.setText("prix = "+sol.getPrix());
                     Point haut_gauche = new Point(30,100);
                     Point bas_droite = new Point(1000,550);
