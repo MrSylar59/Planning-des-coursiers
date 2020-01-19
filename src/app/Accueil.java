@@ -154,7 +154,7 @@ public class Accueil extends javax.swing.JFrame {
 
     private void afficherInstanceButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_afficherInstanceButtonMouseClicked
         if(InstanceList.getSelectedValue() != null){
-            AfficherInstance Fenetre = new AfficherInstance(InstanceList.getSelectedValue());
+            AfficherInstance Fenetre = new AfficherInstance(InstanceList.getSelectedValue(),em);
         }
     }//GEN-LAST:event_afficherInstanceButtonMouseClicked
 

@@ -15,6 +15,7 @@ import metier.RequeteDeliver2i;
 import modele.Instance;
 import modele.Tournee;
 import java.awt.Graphics;
+import javax.persistence.EntityManager;
 import metier.EnumAlgo;
 
 /**
@@ -24,6 +25,7 @@ import metier.EnumAlgo;
 public class AfficherInstance extends javax.swing.JFrame {
     
     private RequeteDeliver2i requeteDeliver2i;
+    private EntityManager em;
     private Instance instance;
     private ZoneDessin dessin;
     /**
@@ -33,9 +35,10 @@ public class AfficherInstance extends javax.swing.JFrame {
         initComponents();
     }
     
-    public AfficherInstance(Instance instance) {
+    public AfficherInstance(Instance instance, EntityManager em) {
         initComponents();
         this.instance = instance;
+        this.em = em;
         initialisationFenetre();
         initConnexion();
         remplirFenetre();
@@ -48,7 +51,7 @@ public class AfficherInstance extends javax.swing.JFrame {
         this.setLocationRelativeTo(null); // Centre la fenêtre
         this.getContentPane().setBackground(new Color(255, 227, 171));
         this.setTitle("Deliver2i");
-        this.dessin = new ZoneDessin(instance);
+        this.dessin = new ZoneDessin(instance,em);
         this.getContentPane().add(dessin);
     }
     
@@ -79,7 +82,7 @@ public class AfficherInstance extends javax.swing.JFrame {
     }
     
     private void remplirComboBox(){
-        for(Enum s : EnumAlgo.values()){
+        for(EnumAlgo s : EnumAlgo.values()){
             jComboBox1.addItem(s);
         }
     }
@@ -146,9 +149,9 @@ public class AfficherInstance extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        System.out.println("click");
-        System.out.println(jComboBox1.getSelectedItem());
-        //dessin.afficherAlgo(jComboBox1.getSelectedItem());
+        
+        //System.out.println(jComboBox1.getItemAt(jComboBox1.getSelectedIndex()));
+        dessin.afficherAlgo(jComboBox1.getItemAt(jComboBox1.getSelectedIndex()));
     }//GEN-LAST:event_jButton1MouseClicked
 
     /**
@@ -188,7 +191,7 @@ public class AfficherInstance extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<Enum> jComboBox1;
+    private javax.swing.JComboBox<EnumAlgo> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration//GEN-END:variables

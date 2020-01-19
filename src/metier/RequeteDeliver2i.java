@@ -60,15 +60,37 @@ public class RequeteDeliver2i {
         Statement stmt = connection.createStatement();
         ResultSet result = stmt.executeQuery(requete);
         while(result.next()){
-            lInstance.add(new Instance(result.getLong("ID"),result.getString("NOM"), result.getInt("DUR_MIN"),result.getInt("DUR_MAX") ,result.getDate("DATE") ));
+            Instance inst = new Instance(result.getLong("ID"),result.getString("NOM"),
+                    result.getInt("DUR_MIN"),result.getInt("DUR_MAX") ,result.getDate("DATE"));
+            requete = "SELECT * FROM Tournee WHERE INST_ID = ?";
+            PreparedStatement psmt = connection.prepareStatement(requete);       
+            psmt.setLong(1, inst.getId());
+            ResultSet rs = psmt.executeQuery();
+            while(rs.next()){
+                Tournee t = new Tournee(rs.getInt("ID"),rs.getTime("DATE_DEBUT"),rs.getTime("DATE_FIN"),inst);
+                inst.AjouterTournee(t);
+            }
+            lInstance.add(inst);
         }
         return lInstance;
+    }
+    
+    public List<Tournee> getTourneeByShift(long id) throws SQLException{
+        String requete = "SELECT t.date_debut as deb, t.date_fin as fin FROM Tournee as t, TOURNEE_SHIFT as ts WHERE t.id = ts.tournee_id AND ts.shift_id = ? ORDER BY t.date_debut ASC";
+        PreparedStatement stmt = connection.prepareStatement(requete);       
+        stmt.setLong(1, id);
+        ResultSet result = stmt.executeQuery();
+        List<Tournee> ltournee = new ArrayList<>();
+        while(result.next()){
+            ltournee.add(new Tournee(result.getTime("DEB"),result.getTime("FIN")));
+        }
+        return ltournee;
     }
     
     public Tournee getTourneebyId(int id) throws SQLException{
         String requete = "SELECT * FROM Tournee WHERE id = ?";
         PreparedStatement stmt = connection.prepareStatement(requete);       
-        stmt.setString(1, ""+id+"");
+        stmt.setInt(1, id);
         ResultSet result = stmt.executeQuery();
         Tournee tournee;
         tournee = new Tournee(result.getDate("debut"),result.getDate("fin"));
@@ -87,14 +109,52 @@ public class RequeteDeliver2i {
         return lTournee;
     }
     
-    public Solution getSolution(int id, String algo) throws SQLException{
-        String requete = "SELECT * FROM Solution WHERE INST_ID = ? AND ALGO = \"?\"";
+    public List<Shift> getShift(long id, String algo) throws SQLException{
+        String requete = "SELECT * FROM Solution WHERE INST_ID = ? AND ALGO = ?";
         PreparedStatement stmt = connection.prepareStatement(requete);       
-        stmt.setInt(1, id);     
-        stmt.setString(1, algo);
+        stmt.setLong(1, id);     
+        stmt.setString(2, algo);
         ResultSet result = stmt.executeQuery();
-        Solution solution = new Solution();//TODO créer sol et return
-        return solution;
+        if( result.next()){
+            long id_sol = result.getLong("ID");
+            List<Shift> lShift = new ArrayList<>();
+            requete = "SELECT * FROM Shift WHERE SOL_ID = ?";
+            stmt = connection.prepareStatement(requete);       
+            stmt.setLong(1, id_sol);
+            ResultSet rs = stmt.executeQuery();
+            while(rs.next()){
+                lShift.add(new Shift(rs.getLong("ID"),rs.getInt("DUREE"),rs.getInt("TEMPS_MORT"),rs.getDouble("PRIX")));
+            }
+            return lShift;
+        }else{
+            return null;
+        }
+    }
+    
+    public int getMinDebutInstance(Instance inst) throws SQLException{
+        String requete = "SELECT MIN(DATE_DEBUT) as DEB FROM Tournee WHERE INST_ID = ? ";
+        PreparedStatement stmt = connection.prepareStatement(requete);       
+        stmt.setLong(1, inst.getId());
+        ResultSet rs = stmt.executeQuery();
+        if(rs.next()){
+            int debut = Math.toIntExact(rs.getTime("DEB").getTime()/60000);
+            return debut;
+        }else{
+            return 0;
+        }
+    }
+    
+    public int getMaxFinInstance(Instance inst) throws SQLException{
+        String requete = "SELECT MAX(DATE_FIN) as FIN FROM Tournee WHERE INST_ID = ? ";
+        PreparedStatement stmt = connection.prepareStatement(requete);       
+        stmt.setLong(1, inst.getId());
+        ResultSet rs = stmt.executeQuery();
+        if(rs.next()){
+            int fin = Math.toIntExact(rs.getTime("FIN").getTime()/60000);
+            return fin;
+        }else{
+            return 0;
+        }
     }
     
     public Shift getShiftbyId(int id) throws SQLException{ //à end

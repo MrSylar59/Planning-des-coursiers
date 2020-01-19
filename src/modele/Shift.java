@@ -89,6 +89,18 @@ public class Shift implements Serializable {
         if (solution != null)
             this.solution = solution;
     }
+    
+    public Shift(long id, int duree, int temps, double prix){
+        this();
+        if(id >= 0)
+            this.id = id;
+        if(duree >= 0)
+            this.duree = duree;
+        if(temps >= 0)
+            this.tempsMort = temps;
+        if(prix >= 0)
+            this.prix = prix;
+    }
 
     /*  METHODES  */
     
@@ -143,6 +155,14 @@ public class Shift implements Serializable {
         this.prix = CalculerPrix();
         
         return true;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public List<Tournee> getTournees() {
+        return tournees;
     }
     
     /**

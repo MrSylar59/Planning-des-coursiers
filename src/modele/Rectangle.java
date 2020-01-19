@@ -40,6 +40,7 @@ public class Rectangle {
     
 
     public void seDessiner(Graphics g){
-            g.drawRect(pHautGauche.getX(), pHautGauche.getY(), width, height);
+        g.setColor(couleur);
+        g.fillRect(pHautGauche.getX(), pHautGauche.getY(), width, height);
     }
 }

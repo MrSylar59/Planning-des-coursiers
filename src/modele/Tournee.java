@@ -102,6 +102,19 @@ public class Tournee implements Serializable {
                     + "Tournee(Date, Date) defaulted to Tournee()");
     }
     
+    public Tournee(int id,Date debut, Date fin,Instance inst) {
+        this();
+        id = id;
+        inst = inst;
+        if (debut != null && fin != null){
+            this.debut  = debut;
+            this.fin    = fin;
+        }
+        else
+            System.out.println("[WARNING] Passed null argument to "
+                    + "Tournee(Date, Date) defaulted to Tournee()");
+    }
+    
     /*  METHODES  */
     
     /**

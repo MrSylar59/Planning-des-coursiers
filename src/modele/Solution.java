@@ -73,6 +73,12 @@ public class Solution implements Serializable {
     public Instance getInstance(){
         return this.inst;
     }
+
+    public List<Shift> getShifts() {
+        return shifts;
+    }
+    
+    
     
     /**
      * Fonction qui ajoute un shift à la liste des solution. Ajouter un shift

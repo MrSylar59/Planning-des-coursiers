@@ -8,9 +8,13 @@ package app;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.persistence.EntityManager;
 import javax.swing.JOptionPane;
 import metier.EnumAlgo;
 import metier.RequeteDeliver2i;
@@ -19,7 +23,8 @@ import modele.Instance;
 import modele.Point;
 import modele.Rectangle;
 import modele.Tournee;
-import modele.Solution;
+import modele.Shift;
+import metier.AlgoOrdonnancement;
 
 /**
  *
@@ -27,6 +32,7 @@ import modele.Solution;
  */
 public class ZoneDessin extends javax.swing.JPanel {
     private Instance instance;
+    private EntityManager em;
     private Graphe graphe;
     private List<Rectangle> lRectangle;
     private RequeteDeliver2i requeteDeliver2i;
@@ -34,15 +40,15 @@ public class ZoneDessin extends javax.swing.JPanel {
     /**
      * Creates new form ZoneDessin
      */
-    public ZoneDessin(Instance instance){
+    public ZoneDessin(Instance instance, EntityManager em){
         initComponents();
         initConnexion();
-        System.out.println("Test");
-        System.out.println(instance);
+        this.em = em;
         this.instance = instance;
         this.setBackground(Color.white);
         this.setBounds(25, 100, 1300, 600);
         afficherDefault();
+        repaint();
     }
     
     private void afficherDefault(){
@@ -53,18 +59,20 @@ public class ZoneDessin extends javax.swing.JPanel {
             int date_min;
             int nb;
             List<Tournee> lTournee = requeteDeliver2i.getTourneebyInstance(instance.getId());
-            date_min = Math.toIntExact(lTournee.get(0).getDebut().getTime()/60000);
-            date_max = Math.toIntExact(lTournee.get(0).getFin().getTime()/60000);
+            /*int date_min_comp = Math.toIntExact(lTournee.get(0).getDebut().getTime()/60000);
+            int date_max_comp = Math.toIntExact(lTournee.get(0).getFin().getTime()/60000);
             for (int i = 0; i < lTournee.size(); i++) {
-                if(date_min > Math.toIntExact(lTournee.get(i).getDebut().getTime()/60000)){
-                    date_min = Math.toIntExact(lTournee.get(i).getDebut().getTime()/60000);
+                if(date_min_comp > Math.toIntExact(lTournee.get(i).getDebut().getTime()/60000)){
+                    date_min_comp = Math.toIntExact(lTournee.get(i).getDebut().getTime()/60000);
                 }
-                if(date_max < Math.toIntExact(lTournee.get(i).getFin().getTime()/60000)){
-                    date_max = Math.toIntExact(lTournee.get(i).getFin().getTime()/60000);
+                if(date_max_comp < Math.toIntExact(lTournee.get(i).getFin().getTime()/60000)){
+                    date_max_comp = Math.toIntExact(lTournee.get(i).getFin().getTime()/60000);
                 }
-            }
+            }*/
+            date_min = requeteDeliver2i.getMinDebutInstance(instance);
+            date_max = requeteDeliver2i.getMaxFinInstance(instance);
             nb=lTournee.size();
-            System.out.println(date_max-date_min);
+            System.out.println(date_max+"=max min= "+date_min);
             this.graphe = new Graphe(haut_gauche, bas_droite, date_min, date_max, nb);
             this.lRectangle = new LinkedList<>();
             for (int i = 0; i < lTournee.size(); i++) {
@@ -97,18 +105,76 @@ public class ZoneDessin extends javax.swing.JPanel {
         switch(algo){
             case AlgoOrdonnancement:
                 try{
-                    Solution solution = requeteDeliver2i.getSolution(instance.getId(),"Algo1");
-                }catch(SQLException){
+                    List<Shift> lshift = requeteDeliver2i.getShift(instance.getId(),"Algo1");
+                    if(lshift == null){
+                        AlgoOrdonnancement algoOrdo = new AlgoOrdonnancement(instance);
+                        algoOrdo.ordonnancer();
+                        algoOrdo.ajouterEnBase(em);
+                        lshift = requeteDeliver2i.getShift(instance.getId(),"Algo1");
+                    }
+                    Point haut_gauche = new Point(30,100);
+                    Point bas_droite = new Point(1000,550);
+                    int min_debut = requeteDeliver2i.getMinDebutInstance(instance);
+                    int max_fin = requeteDeliver2i.getMaxFinInstance(instance);
+                    this.graphe = new Graphe(haut_gauche, bas_droite, min_debut, max_fin, lshift.size());
+                    this.lRectangle = createRectangleByShift(lshift);
+                    
+                }catch(SQLException ex){
                     
                 }
+                repaint();
             break;
             case Default:
                 afficherDefault();
+                repaint();
             break;
         }
     }
     
-
+    private List<Rectangle> createRectangleByShift(List<Shift> lshift){
+        List<Rectangle> lRect = new ArrayList<>();
+        for(int i=0;i < lshift.size();i++){
+            try {
+                List<Tournee> lTournee = requeteDeliver2i.getTourneeByShift(lshift.get(i).getId());
+                int min = Math.toIntExact(lTournee.get(0).getDebut().getTime()/60000);
+                int max = Math.toIntExact(lTournee.get(0).getFin().getTime()/60000);
+                for (int j = 0; j < lTournee.size(); j++) {
+                    long diff_milli = (lTournee.get(j).getFin().getTime()-lTournee.get(j).getDebut().getTime());
+                    int diff_min = Math.toIntExact(diff_milli/60000);
+                    long deb = (Math.toIntExact(lTournee.get(j).getDebut().getTime()/60000)-graphe.getDebut());
+                    int deb_min = Math.toIntExact(deb);
+                    Point origine = new Point(graphe.getOrigine().getX()+deb_min*graphe.getWidth(),
+                            graphe.getOrigine().getY()-(i+1)*graphe.getHeight());
+                    Rectangle rect = new Rectangle(Color.GREEN,origine,diff_min*graphe.getWidth(),graphe.getHeight());
+                    lRect.add(rect);
+                    if(min > Math.toIntExact(lTournee.get(j).getDebut().getTime()/60000))
+                        min = Math.toIntExact(lTournee.get(j).getDebut().getTime()/60000);
+                    if(max < Math.toIntExact(lTournee.get(j).getFin().getTime()/60000))
+                        max = Math.toIntExact(lTournee.get(j).getFin().getTime()/60000);
+                    if(j+1 < lTournee.size()){
+                        origine = new Point(graphe.getOrigine().getX()+
+                            (Math.toIntExact(lTournee.get(j).getFin().getTime()/60000-graphe.getDebut()))*graphe.getWidth(),
+                            graphe.getOrigine().getY()-(i+1)*graphe.getHeight());
+                        rect = new Rectangle(Color.RED,origine,
+                            (Math.toIntExact(lTournee.get(j+1).getDebut().getTime()-
+                            Math.toIntExact(lTournee.get(j).getFin().getTime()))/60000)*graphe.getWidth(),graphe.getHeight());
+                        lRect.add(rect);
+                    
+                    }
+                }
+                if(max-min < instance.getDureeMin()){
+                    Point origine = new Point(graphe.getOrigine().getX()+(max-graphe.getDebut())*graphe.getWidth(),
+                            graphe.getOrigine().getY()-(i+1)*graphe.getHeight());
+                    Rectangle rect = new Rectangle(Color.RED,origine,(instance.getDureeMin()-(max-min))*graphe.getWidth(),graphe.getHeight());
+                    lRect.add(rect);
+                }
+            } catch (SQLException ex) {
+                
+            }
+        }
+        return lRect;
+    }    
+    
     private void initConnexion(){
         try {
             this.requeteDeliver2i = RequeteDeliver2i.getInstance();
