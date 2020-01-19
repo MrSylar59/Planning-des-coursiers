@@ -69,6 +69,14 @@ public class Solution implements Serializable {
             this.algo = algo;
     }
     
+    public Solution(long id,double prix, String algo){
+        this();
+        this.id = id;
+        this.prix = prix;
+        if (algo != null && !algo.isBlank())
+            this.algo = algo;
+    }
+    
     /*  METHODES  */
     public Instance getInstance(){
         return this.inst;
@@ -76,6 +84,10 @@ public class Solution implements Serializable {
 
     public List<Shift> getShifts() {
         return shifts;
+    }
+
+    public double getPrix() {
+        return prix;
     }
     
     

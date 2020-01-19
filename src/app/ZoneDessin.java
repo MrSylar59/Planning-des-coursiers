@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.swing.JOptionPane;
+import metier.Algo2;
 import metier.EnumAlgo;
 import metier.RequeteDeliver2i;
 import modele.Graphe;
@@ -24,6 +25,7 @@ import modele.Point;
 import modele.Rectangle;
 import modele.Tournee;
 import modele.Shift;
+import modele.Solution;
 import metier.AlgoOrdonnancement;
 
 /**
@@ -112,6 +114,31 @@ public class ZoneDessin extends javax.swing.JPanel {
                         algoOrdo.ajouterEnBase(em);
                         lshift = requeteDeliver2i.getShift(instance.getId(),"Algo1");
                     }
+                    Solution sol = requeteDeliver2i.getSolutionbyInstance(instance.getId(),"Algo1");
+                    jLabel1.setText("prix = "+sol.getPrix());
+                    Point haut_gauche = new Point(30,100);
+                    Point bas_droite = new Point(1000,550);
+                    int min_debut = requeteDeliver2i.getMinDebutInstance(instance);
+                    int max_fin = requeteDeliver2i.getMaxFinInstance(instance);
+                    this.graphe = new Graphe(haut_gauche, bas_droite, min_debut, max_fin, lshift.size());
+                    this.lRectangle = createRectangleByShift(lshift);
+                    
+                }catch(SQLException ex){
+                    
+                }
+                repaint();
+            break;
+            case Algo2:
+                try{
+                    List<Shift> lshift = requeteDeliver2i.getShift(instance.getId(),"Algo2");
+                    if(lshift == null){
+                        Algo2 algo2 = new Algo2(instance);
+                        algo2.ordonnancer();
+                        algo2.ajouterEnBase(em);
+                        lshift = requeteDeliver2i.getShift(instance.getId(),"Algo2");
+                    }
+                    Solution sol = requeteDeliver2i.getSolutionbyInstance(instance.getId(),"Algo2");
+                    jLabel1.setText("prix = "+sol.getPrix());
                     Point haut_gauche = new Point(30,100);
                     Point bas_droite = new Point(1000,550);
                     int min_debut = requeteDeliver2i.getMinDebutInstance(instance);
@@ -125,6 +152,7 @@ public class ZoneDessin extends javax.swing.JPanel {
                 repaint();
             break;
             case Default:
+                jLabel1.setText("");
                 afficherDefault();
                 repaint();
             break;
@@ -194,19 +222,28 @@ public class ZoneDessin extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(390, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addContainerGap(290, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

@@ -109,6 +109,32 @@ public class RequeteDeliver2i {
         return lTournee;
     }
     
+    public List<Tournee> getTourneeOrder(Long id) throws SQLException{
+        List<Tournee> lTournee = new ArrayList<>();
+        String requete = "SELECT * FROM Tournee WHERE INST_ID = ? ORDER BY date_debut";
+        PreparedStatement stmt = connection.prepareStatement(requete);       
+        stmt.setLong(1, id);
+        ResultSet result = stmt.executeQuery();
+        while(result.next()){
+            lTournee.add(new Tournee(result.getTime("DATE_DEBUT"), result.getTime("DATE_FIN")));
+        }
+        return lTournee;
+    }
+    
+    public Solution getSolutionbyInstance(long id,String algo) throws SQLException{
+        String requete = "SELECT * FROM Solution WHERE INST_ID = ? AND ALGO = ?";
+        PreparedStatement stmt = connection.prepareStatement(requete);       
+        stmt.setLong(1, id);     
+        stmt.setString(2, algo);
+        ResultSet result = stmt.executeQuery();
+        if( result.next()){
+            Solution sol = new Solution(result.getLong("ID"),result.getDouble("PRIX"),result.getString("ALGO"));
+            return sol;
+        }else{
+            return null;
+        }
+    }
+    
     public List<Shift> getShift(long id, String algo) throws SQLException{
         String requete = "SELECT * FROM Solution WHERE INST_ID = ? AND ALGO = ?";
         PreparedStatement stmt = connection.prepareStatement(requete);       

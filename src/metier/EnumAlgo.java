@@ -11,5 +11,6 @@ package metier;
  */
 public enum EnumAlgo {
     Default,
-    AlgoOrdonnancement;
+    AlgoOrdonnancement,
+    Algo2;
 }

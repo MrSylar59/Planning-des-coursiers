@@ -29,8 +29,6 @@ public class AlgoOrdonnancement {
     public void ordonnancer() {
         HashSet<Tournee> tournees = instance.getTournees();
         Shift s = new Shift(solution);
-        int i=1;
-        int j=0;
         System.out.println("nb tournees dans hashset="+tournees.size());
         for (Tournee t : tournees){ //int j=0;j < tournees.size(); j++
             if (t.compatible(s)){
