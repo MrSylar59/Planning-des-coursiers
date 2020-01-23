@@ -18,7 +18,7 @@ import modele.Solution;
 import modele.Tournee;
 
 /**
- *
+ * Classe réalisant l'algorithme 3
  * @author cyril
  */
 public class Algo3 {
@@ -34,6 +34,13 @@ public class Algo3 {
         this.solution = new Solution(instance, "Algo3");
     }
     
+    /**
+     * METHODES
+     */
+    /**
+     * Fonction qui effectue le rangement des tournées dans des shift en respectant
+     * les conditions de l'instance selon l'algorithme 3
+     */
     public void ordonnancer() {
         try{
             List<Tournee> tournees = requeteDeliver2i.getTourneeOrder(instance.getId());
@@ -69,23 +76,15 @@ public class Algo3 {
 
                             }else{
                                 verifshift.add(lshift.get(min));
-                                //solution.AjouterShift(lshift.get(min));
                                 lshift.remove(min);
                                 j--;
                                 min_changed = 1;
-                                /*shift = new Shift(solution);
-                                shift.AjouterTournee(tournees.get(j));
-                                lshift.add(shift);*/
                             }
                         }else{
                             verifshift.add(lshift.get(min));
-                            //solution.AjouterShift(lshift.get(min));
                             lshift.remove(min);
                             j--;
                             min_changed = 1;
-                            /*shift = new Shift(solution);
-                            shift.AjouterTournee(tournees.get(j));
-                            lshift.add(shift);*/
                         }
                     }else{
                         shift = new Shift(solution);
@@ -96,7 +95,6 @@ public class Algo3 {
                 if(min_changed == 0){
                     if(lshift.get(min).getDuree() >= instance.getDureeMin()){
                         endshift.add(lshift.get(min));
-                        //solution.AjouterShift(lshift.get(min));
                         lshift.remove(min);
                     }
                 }
@@ -115,18 +113,16 @@ public class Algo3 {
                 int indice=-1;
                 int temps_mort=Integer.MAX_VALUE;
                 for(int k=0;k<endshift.size();k++){
-                    //System.out.println("end="+endshift.get(k)+" lshif="+lshift.get(i));
+                    
                     long fin_end_shift = endshift.get(k).getTournees().get(endshift.get(k).getTournees().size()-1).getFin().getTime();
                     long debut_shift_non_fini = lshift.get(i).getTournees().get(lshift.get(i).getTournees().size()-1).getDebut().getTime();
                     if(fin_end_shift < debut_shift_non_fini){
-                        //System.out.println("fin avant deb");
+                        
                         int diff = Math.toIntExact((debut_shift_non_fini-fin_end_shift)/60000);
                         int duree_shift_end = endshift.get(k).getDuree();
                         int duree_shift_non_fini = lshift.get(i).getDuree();
                         if(duree_shift_end+diff+duree_shift_non_fini < instance.getDureeMax()){
-                            //System.out.println("duree supérieur à max="+instance.getDureeMax());
                             if(diff <= instance.getDureeMin()-duree_shift_non_fini){
-                                //System.out.println("diff plus petite que le temps mort");
                                 if(diff < temps_mort){
                                     temps_mort = diff;
                                     indice = k;
@@ -146,19 +142,14 @@ public class Algo3 {
             for(int j=0;j<endshift.size();j++){
                 solution.AjouterShift(endshift.get(j));
             }
-            //solution.AjouterShift(lshift.get(i));
         }catch(SQLException ex){
             
         }
     }
     
-    public void ajouterEnBase(EntityManager em){
-        final EntityTransaction et = em.getTransaction();
-        et.begin();
-        em.persist(solution);
-        et.commit();
-    }
-    
+    /**
+     * Fonction qui initialise la connexion à la base de données
+     */
     private void initConnexion(){
         try {
             this.requeteDeliver2i = RequeteDeliver2i.getInstance();
@@ -168,4 +159,13 @@ public class Algo3 {
             
         }
     }
+
+    /**
+     * GETTEURS
+     */
+    public Solution getSolution() {
+        return solution;
+    }
+    
+    
 }

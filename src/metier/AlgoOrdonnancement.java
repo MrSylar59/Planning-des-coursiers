@@ -60,13 +60,6 @@ public class AlgoOrdonnancement {
             
         }
     }
-
-    public void ajouterEnBase(EntityManager em){
-        final EntityTransaction et = em.getTransaction();
-        et.begin();
-        em.persist(solution);
-        et.commit();
-    }
     
     private void initConnexion(){
         try {
@@ -77,7 +70,7 @@ public class AlgoOrdonnancement {
             
         }
     }
-    
+    /* GETTER */
     public Solution getSolution() {
         return solution;
     }

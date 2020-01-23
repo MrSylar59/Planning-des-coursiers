@@ -18,13 +18,22 @@ import modele.Solution;
 import modele.Tournee;
 
 /**
- *
+ * Classe réalisant l'algorithme 2
  * @author cyril
  */
 public class Algo2 {
      /*  PARAMETRES  */
+    /**
+     * Solution de l'algorithme
+     */
     private Solution solution;
+    /**
+     * Instance concernée
+     */
     private Instance instance;
+    /**
+     * Instance de connexion à la base de données
+     */
     private RequeteDeliver2i requeteDeliver2i;
     
     /*  CONSTRUCTEURS  */
@@ -34,6 +43,14 @@ public class Algo2 {
         this.solution = new Solution(instance, "Algo2");
     }
     
+    /**
+     * METHODES
+     */
+    
+    /**
+     * Fonction qui effectue le rangement des tournées dans des shift en respectant
+     * les conditions de l'instance selon l'algorithme 2
+     */
     public void ordonnancer() {
         try{
             List<Tournee> tournees = requeteDeliver2i.getTourneeOrder(instance.getId());
@@ -117,14 +134,10 @@ public class Algo2 {
             
         }
     }
-    
-    public void ajouterEnBase(EntityManager em){
-        final EntityTransaction et = em.getTransaction();
-        et.begin();
-        em.persist(solution);
-        et.commit();
-    }
-    
+
+    /**
+     * Fonction qui initialise la connexion à la base de données
+     */
     private void initConnexion(){
         try {
             this.requeteDeliver2i = RequeteDeliver2i.getInstance();
@@ -134,4 +147,12 @@ public class Algo2 {
             
         }
     }
+    
+    /**
+     * GETTEURS
+     */
+    public Solution getSolution() {
+        return solution;
+    }
+    
 }

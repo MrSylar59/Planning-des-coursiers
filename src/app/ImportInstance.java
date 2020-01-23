@@ -19,17 +19,22 @@ import javax.persistence.EntityTransaction;
 import modele.Instance;
 
 /**
- *
+ * Classe permettant l'import d'instance dans la base de données à partir d'un
+ * fichier du pc
  * @author cyril
  */
 public class ImportInstance extends javax.swing.JDialog {
 
-    private RequeteDeliver2i requeteDeliver2i;
-    
-    private EntityManager em;
+    /**
+     * PARAMETRE
+     */
     
     /**
-     * Creates new form ImportInstance
+     * Entité de management de la base de données
+     */
+    private EntityManager em;
+    /**
+     * CONSTRUCTEUR
      */
     public ImportInstance(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -38,9 +43,14 @@ public class ImportInstance extends javax.swing.JDialog {
         
         initComponents();
         initialisationFenetre();
-        initConnexion();
     }
     
+    /**
+     * METHODE
+     */
+    /**
+     * Fonction permettant d'initialiser la fenêtre
+     */
     private void initialisationFenetre() {
         this.setVisible(true); // Rendre visible
         this.setSize(570, 600); // Défini la taille
@@ -49,15 +59,10 @@ public class ImportInstance extends javax.swing.JDialog {
         this.setTitle("Deliver2i");
     }
     
-    private void initConnexion(){
-        try {
-            this.requeteDeliver2i = RequeteDeliver2i.getInstance();
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(this, ex,"ClassNotFoundException",JOptionPane.ERROR_MESSAGE);
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex,"SQLException",JOptionPane.ERROR_MESSAGE);
-        }
-    }
+    /**
+     * Fonction qui initialise la connexion à la base de données
+     */
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -90,7 +95,10 @@ public class ImportInstance extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+/**
+ * Foncion ajoutant l'instance dans la base après avoir séléctionné un fichier
+ * @param evt 
+ */
     private void importInstanceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importInstanceButtonActionPerformed
         int result = importInstanceButton.getApproveButtonMnemonic();
         System.out.println("result :"+result);

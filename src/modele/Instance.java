@@ -165,6 +165,10 @@ public class Instance implements Serializable {
         return this.solutions.add(s);
     }
     
+    /**
+     * GETTEURS
+     */
+    
     public long getId(){
         return id;
     } 

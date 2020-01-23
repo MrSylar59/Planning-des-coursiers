@@ -7,6 +7,8 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,11 +56,18 @@ public class Solution implements Serializable {
     private List<Shift> shifts;
     
     /*  CONSTRUCTEURS  */
+    /**
+     * Constructeur par default
+     */
     public Solution() {
         this.prix = 0;
         this.shifts = new LinkedList<>();
     }
-    
+    /**
+     * Constructeur par data Instance et code algorithme
+     * @param inst
+     * @param algo 
+     */
     public Solution(Instance inst, String algo){
         this();
         
@@ -69,6 +78,12 @@ public class Solution implements Serializable {
             this.algo = algo;
     }
     
+    /**
+     * Constructeur par data identifiant, prix totale, code de l'algorithme
+     * @param id
+     * @param prix
+     * @param algo 
+     */
     public Solution(long id,double prix, String algo){
         this();
         this.id = id;
@@ -77,7 +92,10 @@ public class Solution implements Serializable {
             this.algo = algo;
     }
     
-    /*  METHODES  */
+    /**
+     * GETTEURS
+     */
+    
     public Instance getInstance(){
         return this.inst;
     }
@@ -90,8 +108,13 @@ public class Solution implements Serializable {
         return prix;
     }
     
+    public long getId(){
+        return id;
+    }
     
-    
+    /**
+     * METHODES  
+     */
     /**
      * Fonction qui ajoute un shift à la liste des solution. Ajouter un shift
      * modifie le prix de la solution.
@@ -104,6 +127,17 @@ public class Solution implements Serializable {
         return this.shifts.add(s);
     }
 
+    /**
+     * Fonction permettant d'ajouter la solution en base
+     * @param em 
+     */
+    public void ajouterEnBase(EntityManager em){
+        final EntityTransaction et = em.getTransaction();
+        et.begin();
+        em.persist(this);
+        et.commit();
+    }
+    
     @Override
     public int hashCode() {
         int hash = 3;

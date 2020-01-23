@@ -19,12 +19,24 @@ import modele.Instance;
  * Fenêtre d'accueil de l'application qui s'ouvre quand l'utilisateur lance
  * l'application.
  * 
- * @author thomas
+ * @author cyril
  */
 public class Accueil extends javax.swing.JFrame {
 
+    /**
+     * PARAMETRES
+     */
+    /**
+     * Entité de persistence de la base de données
+     */
     private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("PlanningCoursiersPU");
+    /**
+     * Entité de management de persistence de la base de données
+     */
     private final EntityManager em = emf.createEntityManager();
+    /**
+     * Instance de la connexion à la base de données
+     */
     private RequeteDeliver2i requeteDeliver2i;
     /**
      * ouvre une fenêtre Accueil
@@ -35,7 +47,9 @@ public class Accueil extends javax.swing.JFrame {
         initConnexion();
         remplirInstanceList();
     }
-    
+    /**
+     * Fonction qui initialise les paramètres de la fenêtre
+     */
     private void initialisationFenetre() {
         this.setVisible(true); // Rendre visible
         this.setSize(800, 600); // Défini la taille
@@ -44,6 +58,9 @@ public class Accueil extends javax.swing.JFrame {
         this.setTitle("Deliver2i");
     }
     
+    /**
+     * Fonction qui initialise la connection à la base de données
+     */
     private void initConnexion(){
         try {
             this.requeteDeliver2i = RequeteDeliver2i.getInstance();
@@ -54,6 +71,9 @@ public class Accueil extends javax.swing.JFrame {
         }
     }
     
+    /**
+     * Fonction qui remplit le JList avec les instanes présente dans la base de données.
+     */
     private void remplirInstanceList(){
         try {
             List<Instance> liste = requeteDeliver2i.getInstanceList();
@@ -82,7 +102,6 @@ public class Accueil extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         importButton = new javax.swing.JButton();
         afficherInstanceButton = new javax.swing.JButton();
-        supprimerInstanceButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(255, 227, 171));
@@ -108,9 +127,6 @@ public class Accueil extends javax.swing.JFrame {
             }
         });
 
-        supprimerInstanceButton.setText("Supprimer l'instance");
-        supprimerInstanceButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -123,8 +139,7 @@ public class Accueil extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(importButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(afficherInstanceButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(supprimerInstanceButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
+                    .addComponent(afficherInstanceButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 152, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -138,9 +153,7 @@ public class Accueil extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(importButton)
                         .addGap(33, 33, 33)
-                        .addComponent(afficherInstanceButton)
-                        .addGap(33, 33, 33)
-                        .addComponent(supprimerInstanceButton)))
+                        .addComponent(afficherInstanceButton)))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
 
@@ -159,7 +172,7 @@ public class Accueil extends javax.swing.JFrame {
     }//GEN-LAST:event_afficherInstanceButtonMouseClicked
 
     
-    
+    /** GETTER **/
     public EntityManager getEm(){
         return this.em;
     }
@@ -201,7 +214,7 @@ public class Accueil extends javax.swing.JFrame {
         /// GENERATED CODE STOPS HERE
         //////////////////////////////////////////////
         
-        /*  CODE DE L'APPLICATION ICI  */
+        
         
     }
 
@@ -211,6 +224,5 @@ public class Accueil extends javax.swing.JFrame {
     private javax.swing.JButton importButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton supprimerInstanceButton;
     // End of variables declaration//GEN-END:variables
 }

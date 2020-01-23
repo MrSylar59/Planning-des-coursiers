@@ -6,7 +6,7 @@
 package metier;
 
 /**
- *
+ * Enum contenant la liste des algorithmes créés
  * @author cyril
  */
 public enum EnumAlgo {

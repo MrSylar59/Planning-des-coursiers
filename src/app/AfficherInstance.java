@@ -19,17 +19,29 @@ import javax.persistence.EntityManager;
 import metier.EnumAlgo;
 
 /**
- *
+ * Fenêtre contenant la séléction de l'algorithme et la partie graphique 
+ * permettant d'afficher les solutions
  * @author cyril
  */
 public class AfficherInstance extends javax.swing.JFrame {
     
-    private RequeteDeliver2i requeteDeliver2i;
+    /**
+     * PARAMETRES
+     */
+    /**
+     * Entité de management de la base de données
+     */
     private EntityManager em;
+    /**
+     * Instance concernée
+     */
     private Instance instance;
+    /**
+     * Jpanel acceuillant le graphique contenant la solution
+     */
     private ZoneDessin dessin;
     /**
-     * Creates new form AfficherInstance
+     * CONSTRUCTEUR
      */
     public AfficherInstance() {
         initComponents();
@@ -40,11 +52,13 @@ public class AfficherInstance extends javax.swing.JFrame {
         this.instance = instance;
         this.em = em;
         initialisationFenetre();
-        initConnexion();
         remplirFenetre();
         remplirComboBox();
     }
 
+    /**
+     * Fonction initialisant les paramètres de la fenêtre
+     */
     private void initialisationFenetre() {
         this.setVisible(true); // Rendre visible
         this.setSize(1400, 900); // Défini la taille
@@ -55,32 +69,17 @@ public class AfficherInstance extends javax.swing.JFrame {
         this.getContentPane().add(dessin);
     }
     
-    private void initConnexion(){
-        try {
-            this.requeteDeliver2i = RequeteDeliver2i.getInstance();
-        } catch (ClassNotFoundException ex) {
-            JOptionPane.showMessageDialog(this, ex,"ClassNotFoundException",JOptionPane.ERROR_MESSAGE);
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, ex,"SQLException",JOptionPane.ERROR_MESSAGE);
-        }
-    }
     
+    /**
+     * Fonction qui ajoute le nom  de l'instance
+     */
     private void remplirFenetre(){
         jLabel1.setText(instance.getNom());
-        try{
-        List<Tournee> lTournee = requeteDeliver2i.getTourneebyInstance(this.instance.getId());
-        //DefaultListModel modele = new DefaultListModel();        
-        lTournee.forEach((tournee) -> {
-            //   modele.addElement(tournee);
-            
-        });
-        //    tourneeList.setModel(modele);
-        }catch (SQLException ex) {
-            
-            System.out.println(ex); 
-        }
     }
     
+    /**
+     * Fonction qui remplit la liste des algorithme
+     */
     private void remplirComboBox(){
         for(EnumAlgo s : EnumAlgo.values()){
             jComboBox1.addItem(s);

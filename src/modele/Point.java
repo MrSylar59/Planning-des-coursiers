@@ -5,10 +5,26 @@
  */
 package modele;
 
+/**
+ * Classe permettant de céer des Points
+ * @author cyril
+ */
 public class Point {
+    /**
+     * PARAMETRES
+     */
+    /**
+     * Coordonée en x
+     */
     private int x;
+    /**
+     * Coordonée en y
+     */
     private int y;
 
+    /**
+     * CONSTRUCTEUR
+     */
     public Point(int x, int y){
         this.x = x;
         this.y = y;
@@ -18,7 +34,10 @@ public class Point {
         this.x = p.x;
         this.y = p.y;
     }
-
+    
+    /**
+     * GETTEURS
+     */
     public int getX() {
         return x;
     }
