@@ -1,0 +1,13 @@
+instance 1		prix = 5857€
+instance 2		prix = 3327€
+instance 3		prix = 4309€
+instance 4		prix = 2902€
+instance 5		prix = 3866€
+instance 6		prix = 5245€
+instance 7		prix = 1876€
+instance 8		prix = 3307€
+instance 9		prix = 4618€
+instance 10		prix = 3035€
+instance test 	prix = 735€
+
+(1€ = 1 minute)
